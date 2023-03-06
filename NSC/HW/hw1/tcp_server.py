@@ -1,7 +1,7 @@
 import socket
 
 HOST = '0.0.0.0'
-PORT = 7777
+PORT = 8888
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -21,8 +21,8 @@ while True:
             conn.close()
             print('client closed connection.')
             break
-        print('recv: ' + indata.decode())
+        # print('recv: ' + indata.decode())
 
-        outdata = 'echo ' + indata.decode()
-        conn.send(outdata.encode())
+        # outdata = 'echo ' + indata.decode()
+        # conn.send(outdata.encode())
 s.close()

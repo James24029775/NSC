@@ -75,11 +75,11 @@ int main(int argc, const char* argv[]) {
     }
 
     // list all device
-    int cnt = 0;
-    for (pcap_if_t* d = devices; d; d = d->next, cnt++) {
-        vec.push_back(d);
-        cout << "Name: " << d->name << endl;
-    }
+    // int cnt = 0;
+    // for (pcap_if_t* d = devices; d; d = d->next, cnt++) {
+    //     vec.push_back(d);
+    //     cout << "Name: " << d->name << endl;
+    // }
 
     struct bpf_program fp;  // for filter, compiled in "pcap_compile"
     pcap_t* handle;
@@ -90,7 +90,7 @@ int main(int argc, const char* argv[]) {
         fprintf(stderr, "pcap_open_live(): %s\n", errbuf);
         exit(1);
     }
-
+    // show_command(cmd);
     if (-1 == pcap_compile(handle, &fp, cmd.filter, 1, PCAP_NETMASK_UNKNOWN))  // compile "your filter" into a filter program, type of {your_filter} is "char *"
     {
         pcap_perror(handle, "pkg_compile compile error\n");
@@ -247,6 +247,9 @@ void save_command(struct command* cmd, int argc, const char* argv[]) {
             }
         }
     }
+    if (!strcmp(cmd->filter, "all")){
+        strcpy(cmd->filter, "");
+    }
 }
 
 int toDigit(const char* str) {
@@ -260,8 +263,8 @@ int toDigit(const char* str) {
 
 void initial_command(struct command* cmd) {
     memset(cmd, 0, sizeof(struct command));
-    cmd->count = -1;
-    strcpy(cmd->filter, "all");
+    cmd->count = 2147483647;
+    strcpy(cmd->filter, "");
 }
 
 void show_command(struct command cmd) {
