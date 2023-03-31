@@ -33,9 +33,13 @@ def main():
     #                       total_time=TOTAL_TIME, link_delay=LINK_DELAY, max_colision_wait_time=MAX_COL, packet_size=PACKET_SIZE, seed=4, p_resend=P_RESEND)
     # print(slotted_aloha(env_setting, True))
 
+    # env_setting = Setting(host_num=HOST_NUM, packet_num=PACKET_NUM,
+    #                       total_time=TOTAL_TIME, link_delay=LINK_DELAY, max_colision_wait_time=MAX_COL, packet_size=PACKET_SIZE, seed=4, p_resend=P_RESEND)
+    # print(csma(env_setting, True))
+
     env_setting = Setting(host_num=HOST_NUM, packet_num=PACKET_NUM,
                           total_time=TOTAL_TIME, link_delay=LINK_DELAY, max_colision_wait_time=MAX_COL, packet_size=PACKET_SIZE, seed=4, p_resend=P_RESEND)
-    print(csma(env_setting, True))
+    print(csma_cd(env_setting, True))
 
     # print('ALOHA')
     # sum_success = sum_idle = sum_collision = 0

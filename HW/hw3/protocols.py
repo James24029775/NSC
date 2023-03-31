@@ -269,20 +269,21 @@ def csma(setting, show_history=False):
 
             # CS處理
             if pending_flg:
-                # 其他hosts的t-1-link_delay的status若非"."，表示占用中
+                # 其他hosts的t-1-link_delay的status若非"."or ">"，表示占用中
                 busy_flg = False
                 if t - 1 - setting.link_delay >= 0:
                     for other_host in range(setting.host_num):
                         if the_host == other_host:
                             continue
 
-                        if status[other_host][t - 1 - setting.link_delay] != '.':
+                        if status[other_host][t - 1 - setting.link_delay] != '.' and status[other_host][t - 1 - setting.link_delay] != '>':
                             busy_flg = True
                             break
                     
                 # 若busy_flg為假則發送類型"<"；否則status設定"."下次繼續CS
                 if busy_flg:
                     status[the_host].append('.')
+                    freeze[the_host] = random.randint(1, setting.max_colision_wait_time)-1
                     remaining_seg[the_host] = setting.packet_time
                 else:
                     status[the_host].append('<')
@@ -386,9 +387,9 @@ def csma_cd(setting, show_history=False):
                 pkt_index[the_host] += 1
                 # 若remaining_seg是0，就可以進行新一輪的傳輸；否則要先把之前傳輸先完成
                 if remaining_seg[the_host] == 0:
-                    remaining_seg[the_host] = setting.packet_size
+                    remaining_seg[the_host] = setting.packet_time
             
-            if (pending[the_host] > 0 and remaining_seg[the_host] == setting.packet_size):
+            if (pending[the_host] > 0 and remaining_seg[the_host] == setting.packet_time):
                 pending_flg = True
 
             # 若是還在freeze倒數，直接idle跳過
@@ -406,17 +407,18 @@ def csma_cd(setting, show_history=False):
                         if the_host == other_host:
                             continue
 
-                        if status[other_host][t - 1 - setting.link_delay] != '.':
+                        if status[other_host][t - 1 - setting.link_delay] != '.' and status[other_host][t - 1 - setting.link_delay] != '>':
                             busy_flg = True
                             break
                     
                 # 若busy_flg為假則發送類型"<"；否則status設定"."下次繼續CS
                 if busy_flg:
                     status[the_host].append('.')
-                    remaining_seg[the_host] = setting.packet_size
+                    remaining_seg[the_host] = setting.packet_time
+                    freeze[the_host] = random.randint(1, setting.max_colision_wait_time)-1
                 else:
                     status[the_host].append('<')
-                    remaining_seg[the_host] = setting.packet_size - 1
+                    remaining_seg[the_host] = setting.packet_time - 1
 
             # 繼續前次尚未完成的封包傳輸
             elif remaining_seg[the_host] >= 1:
@@ -433,8 +435,8 @@ def csma_cd(setting, show_history=False):
                 # 如果已經發生collision，則中斷
                 if busy_flg:
                     status[the_host].append('|')
-                    remaining_seg[the_host] = setting.packet_size
-                    freeze[the_host] = random.randint(1, setting.max_colision_wait_time)
+                    remaining_seg[the_host] = setting.packet_time
+                    freeze[the_host] = random.randint(1, setting.max_colision_wait_time)-1
                 # 否則繼續未完成的傳輸
                 else:
                     if remaining_seg[the_host] > 1:
@@ -449,7 +451,7 @@ def csma_cd(setting, show_history=False):
                         
                         # 重製remaining_seg，若pending尚有，將其設成packet_size使其開始新一輪的傳輸
                         if pending[the_host] != 0:
-                            remaining_seg[the_host] = setting.packet_size
+                            remaining_seg[the_host] = setting.packet_time
                         else:
                             remaining_seg[the_host] = 0
             
@@ -494,7 +496,7 @@ def csma_cd(setting, show_history=False):
         else:
             channel += 'X'
 
-    success_pattern = '<'+'-'*(setting.packet_size-2)+'>'
+    success_pattern = '<'+'-'*setting.packet_size+'>'
     success = channel.count(success_pattern) * len(success_pattern)
     idle = channel.count('.')
     collision = setting.total_time - idle - success
