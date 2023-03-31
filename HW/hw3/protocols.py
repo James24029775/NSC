@@ -3,13 +3,14 @@
 import numpy as np
 import random
 
+
 def aloha(setting, show_history=False):
     status = [[] for _ in range(setting.host_num)]
     pkt_index = [0 for _ in range(setting.host_num)]
     pending = [0 for _ in range(setting.host_num)]
     remaining_seg = [0 for _ in range(setting.host_num)]
     freeze = [0 for _ in range(setting.host_num)]
-    
+
     packets_time = setting.gen_packets()
     for t in range(setting.total_time):
         for the_host in range(setting.host_num):
@@ -22,7 +23,7 @@ def aloha(setting, show_history=False):
                 # 若remaining_seg是0，就可以進行新一輪的傳輸；否則要先把之前傳輸先完成
                 if remaining_seg[the_host] == 0:
                     remaining_seg[the_host] = setting.packet_time
-            
+
             if (pending[the_host] > 0 and remaining_seg[the_host] == setting.packet_time):
                 pending_flg = True
 
@@ -52,7 +53,7 @@ def aloha(setting, show_history=False):
         for the_host in range(setting.host_num):
             if status[the_host][t] != '>':
                 continue
-            
+
             NAK_flg = False
             for other_host in range(setting.host_num):
                 if the_host == other_host:
@@ -66,7 +67,8 @@ def aloha(setting, show_history=False):
 
             if NAK_flg:
                 status[the_host][t] = '|'
-                freeze[the_host] = random.randint(1, setting.max_colision_wait_time)-1
+                freeze[the_host] = random.randint(
+                    1, setting.max_colision_wait_time)-1
             else:
                 pending[the_host] -= 1
 
@@ -116,13 +118,14 @@ def aloha(setting, show_history=False):
 
     return success/setting.total_time, idle/setting.total_time, collision/setting.total_time
 
+
 def slotted_aloha(setting, show_history=False):
     status = [[] for _ in range(setting.host_num)]
     pkt_index = [0 for _ in range(setting.host_num)]
     pending = [0 for _ in range(setting.host_num)]
     remaining_seg = [0 for _ in range(setting.host_num)]
     freeze = [0 for _ in range(setting.host_num)]
-    
+
     packets_time = setting.gen_packets()
     for t in range(setting.total_time):
         for the_host in range(setting.host_num):
@@ -138,7 +141,7 @@ def slotted_aloha(setting, show_history=False):
                 # 若remaining_seg是0，就可以進行新一輪的傳輸；否則要先把之前傳輸先完成
                 if remaining_seg[the_host] == 0:
                     remaining_seg[the_host] = setting.packet_time
-            
+
             if (pending[the_host] > 0 and remaining_seg[the_host] == setting.packet_time):
                 pending_flg = True
 
@@ -173,7 +176,7 @@ def slotted_aloha(setting, show_history=False):
         for the_host in range(setting.host_num):
             if status[the_host][t] != '>':
                 continue
-            
+
             NAK_flg = False
             for other_host in range(setting.host_num):
                 if the_host == other_host:
@@ -238,13 +241,14 @@ def slotted_aloha(setting, show_history=False):
 
     return success/setting.total_time, idle/setting.total_time, collision/setting.total_time
 
+
 def csma(setting, show_history=False):
     status = [[] for _ in range(setting.host_num)]
     pkt_index = [0 for _ in range(setting.host_num)]
     pending = [0 for _ in range(setting.host_num)]
     remaining_seg = [0 for _ in range(setting.host_num)]
     freeze = [0 for _ in range(setting.host_num)]
-    
+
     packets_time = setting.gen_packets()
     for t in range(setting.total_time):
         for the_host in range(setting.host_num):
@@ -257,7 +261,7 @@ def csma(setting, show_history=False):
                 # 若remaining_seg是0，就可以進行新一輪的傳輸；否則要先把之前傳輸先完成
                 if remaining_seg[the_host] == 0:
                     remaining_seg[the_host] = setting.packet_time
-            
+
             if (pending[the_host] > 0 and remaining_seg[the_host] == setting.packet_time):
                 pending_flg = True
 
@@ -279,11 +283,12 @@ def csma(setting, show_history=False):
                         if status[other_host][t - 1 - setting.link_delay] != '.' and status[other_host][t - 1 - setting.link_delay] != '>':
                             busy_flg = True
                             break
-                    
+
                 # 若busy_flg為假則發送類型"<"；否則status設定"."下次繼續CS
                 if busy_flg:
                     status[the_host].append('.')
-                    freeze[the_host] = random.randint(1, setting.max_colision_wait_time)-1
+                    freeze[the_host] = random.randint(
+                        1, setting.max_colision_wait_time)-1
                     remaining_seg[the_host] = setting.packet_time
                 else:
                     status[the_host].append('<')
@@ -305,7 +310,7 @@ def csma(setting, show_history=False):
         for the_host in range(setting.host_num):
             if status[the_host][t] != '>':
                 continue
-            
+
             NAK_flg = False
             for other_host in range(setting.host_num):
                 if the_host == other_host:
@@ -319,7 +324,8 @@ def csma(setting, show_history=False):
 
             if NAK_flg:
                 status[the_host][t] = '|'
-                freeze[the_host] = random.randint(1, setting.max_colision_wait_time)-1
+                freeze[the_host] = random.randint(
+                    1, setting.max_colision_wait_time)-1
             else:
                 pending[the_host] -= 1
 
@@ -369,13 +375,14 @@ def csma(setting, show_history=False):
 
     return success/setting.total_time, idle/setting.total_time, collision/setting.total_time
 
+
 def csma_cd(setting, show_history=False):
     status = [[] for _ in range(setting.host_num)]
     pkt_index = [0 for _ in range(setting.host_num)]
     pending = [0 for _ in range(setting.host_num)]
     remaining_seg = [0 for _ in range(setting.host_num)]
     freeze = [0 for _ in range(setting.host_num)]
-    
+
     packets_time = setting.gen_packets()
     for t in range(setting.total_time):
         for the_host in range(setting.host_num):
@@ -388,7 +395,7 @@ def csma_cd(setting, show_history=False):
                 # 若remaining_seg是0，就可以進行新一輪的傳輸；否則要先把之前傳輸先完成
                 if remaining_seg[the_host] == 0:
                     remaining_seg[the_host] = setting.packet_time
-            
+
             if (pending[the_host] > 0 and remaining_seg[the_host] == setting.packet_time):
                 pending_flg = True
 
@@ -410,12 +417,13 @@ def csma_cd(setting, show_history=False):
                         if status[other_host][t - 1 - setting.link_delay] != '.' and status[other_host][t - 1 - setting.link_delay] != '>':
                             busy_flg = True
                             break
-                    
+
                 # 若busy_flg為假則發送類型"<"；否則status設定"."下次繼續CS
                 if busy_flg:
                     status[the_host].append('.')
                     remaining_seg[the_host] = setting.packet_time
-                    freeze[the_host] = random.randint(1, setting.max_colision_wait_time)-1
+                    freeze[the_host] = random.randint(
+                        1, setting.max_colision_wait_time)-1
                 else:
                     status[the_host].append('<')
                     remaining_seg[the_host] = setting.packet_time - 1
@@ -436,25 +444,25 @@ def csma_cd(setting, show_history=False):
                 if busy_flg:
                     status[the_host].append('|')
                     remaining_seg[the_host] = setting.packet_time
-                    freeze[the_host] = random.randint(1, setting.max_colision_wait_time)-1
+                    freeze[the_host] = random.randint(
+                        1, setting.max_colision_wait_time)-1
                 # 否則繼續未完成的傳輸
                 else:
                     if remaining_seg[the_host] > 1:
                         status[the_host].append('-')
                         remaining_seg[the_host] -= 1
-                        
 
                     elif remaining_seg[the_host] == 1:
                         status[the_host].append('>')
                         remaining_seg[the_host] = 0
                         pending[the_host] -= 1
-                        
+
                         # 重製remaining_seg，若pending尚有，將其設成packet_size使其開始新一輪的傳輸
                         if pending[the_host] != 0:
                             remaining_seg[the_host] = setting.packet_time
                         else:
                             remaining_seg[the_host] = 0
-            
+
             # 沒有任何傳輸慾望
             else:
                 status[the_host].append('.')
@@ -466,7 +474,6 @@ def csma_cd(setting, show_history=False):
                 print(status[i][j], end='')
             print()
 
-    
     channel = ''
     for t in range(setting.total_time):
         less_cnt = 0
