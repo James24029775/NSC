@@ -33,14 +33,13 @@ class HTTPServer():
             thread = threading.Thread(target=self.http_parser)
             thread.start()
             thread.join()
-            #! CCCCCCCCCCCCCHHHHHHHHHHHHHHHHHHHHEEEEEEEEEEEEEEEEEEEECCCCCCCCCCCCCCCCCCKKKKKKKKKKKKKKKK
             if self.numOfTransmittedFiles == 3:
                 break
             
     def http_parser(self):
         # Get the client request
         request = self.conn.recv(1024).decode()
-        prink(request)
+        prink(request.strip())
         
         request = request.split(' ')[1]
         if request == '/':
@@ -61,15 +60,14 @@ class HTTPServer():
             response = head + body
             self.numOfTransmittedFiles += 1
             
-        # prink(response)
-        prink(head)
-
         # Send HTTP response
         self.conn.sendall(response.encode())
         
         # After sleeping 1 second, close the connection
         time.sleep(1)
-        self.close()
+        self.conn.close()
+        self.conn = ""
+        prink('Connection ' + str(self.addr[0]) + ':' + str(self.addr[1]) + ' has closed.\n')
         
     def randomPickThreeFiles(self):
         numbers = random.sample(range(0, 10), 3)
@@ -100,4 +98,6 @@ class HTTPServer():
     
     def close(self):
         # Close the server socket.
-        self.conn.close()
+        self.server_socket.close()
+        prink('HTTP/1.0 server has been closed.')
+        exit()

@@ -5,7 +5,6 @@ import os
 import sys
 import select
 import threading
-#! close實作錯誤！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
 
 def prink(msg):
     print("\033[38;5;218m" + msg + "\033[0m")
@@ -61,7 +60,7 @@ class HTTPServer():
                 self.numOfTransmittedFiles += 1
                 
             # prink(response)
-            prink(head)
+            # prink(head)
 
             # Send HTTP response
             self.conn.sendall(response.encode())

@@ -28,7 +28,7 @@ class HTTPClient():
         if path == "":
             path = "/"
         
-        print(ip, port, path)
+        # print(ip, port, path)
         if self.first:
             self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.client_socket.connect((ip, port))
@@ -65,7 +65,7 @@ class Response():
                 key, value = dataFromBuffer[i].split(':')[0].strip(), dataFromBuffer[i].split(':')[1].strip()
                 key = key.lower()
                 self.headers[key] = value
-        prink(self.headers)
+        # prink(self.headers)
         self.body = dataFromBuffer[i+1].encode()
         self.body_length += len(self.body)
         
@@ -93,7 +93,7 @@ class Response():
         if len(infds) != 0:
             dataFromBuffer = self.socket.recv(1024)
             self.body_length += len(dataFromBuffer)
-            prink(str(self.body_length) + '/' + self.headers['content-length'])
+            # prink(str(self.body_length) + '/' + self.headers['content-length'])
             if self.body_length == self.headers['content-length']:
                 self.complete = True
             return dataFromBuffer
