@@ -5,7 +5,8 @@ import os
 import sys
 import select
 import threading
-sys.path.append("/home/james/NSC/HW/hw6/hw6/my")
+current_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(current_dir)
 from http_2_0_header import http2Header
 
 CHUNK_SIZE = 4096
