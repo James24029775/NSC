@@ -1,0 +1,8 @@
+
+樹狀拓樸
+	sudo mn --switch ovs --controller remote --topo tree,depth=2,fanout=2
+	sudo mn --switch ovs --controller remote --topo tree,depth=3,fanout=2
+
+線狀拓樸
+	sudo mn --switch ovs --controller remote --topo single,5
+	sudo mn --switch ovs --controller remote --topo single,10
