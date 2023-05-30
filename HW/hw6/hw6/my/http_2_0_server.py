@@ -55,6 +55,7 @@ class HTTPServer():
                 others += dataFromBuffer
             frame, others = self.seperate(others)
             length, type, flags, RcvStreamId, request = http2Header.getParsed(frame)
+            prink("Please wait few seconds for transmission...")
             print(request)
             
             request = request.split('\r\n')
